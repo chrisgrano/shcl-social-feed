@@ -67,7 +67,7 @@
     var perView = parseInt(d.perView, 10) || 5;
 
     var css =
-      ":host{display:block;font-family:inherit;color:" + ink + "}" +
+      ":host{display:block;font-family:inherit;overflow-x:clip;color:" + ink + "}" +
       "*{box-sizing:border-box}" +
       ".head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}" +
       ".eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.16em;" +
