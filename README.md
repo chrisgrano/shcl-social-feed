@@ -41,7 +41,14 @@ When it finishes, open `https://chrisgrano.github.io/shcl-social-feed/` to see t
         style="width:100%;border:0;height:1100px" loading="lazy"></iframe>
 ```
 
-Options: `data-count`, `data-columns` (phones always show 2), `data-gap`, `data-radius`,
+**Swipeable single row (carousel):**
+```html
+<div data-social-feed data-layout="carousel" data-shape="tall" data-count="15"></div>
+<script src="https://chrisgrano.github.io/shcl-social-feed/widget.js" async></script>
+```
+
+Options: `data-layout` (`grid` or `carousel`), `data-shape` (`square`, `portrait` 4:5, `tall` 9:16),
+`data-count`, `data-columns` (grid; phones always show 2), `data-tile-width` (carousel, px), `data-gap`, `data-radius`,
 `data-accent` (button color, e.g. `#0b2545`), `data-follow="false"` to hide the Follow button.
 For the iframe, pass the same names in the URL (`?count=6&accent=%230b2545`).
 

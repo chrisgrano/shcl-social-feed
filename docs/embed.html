@@ -12,8 +12,9 @@
 <div id="feed" data-social-feed></div>
 <script>
   var q = new URLSearchParams(location.search), el = document.getElementById("feed");
-  ["count", "columns", "gap", "radius", "follow", "accent"].forEach(function (k) {
-    if (q.has(k)) el.dataset[k] = q.get(k);
+  ["count", "columns", "gap", "radius", "follow", "accent", "layout", "shape", "tile-width"].forEach(function (k) {
+    var key = k.replace(/-(\w)/g, function (_, c) { return c.toUpperCase(); });
+    if (q.has(k)) el.dataset[key] = q.get(k);
   });
 </script>
 <script src="widget.js"></script>
