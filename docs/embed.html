@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Instagram feed</title>
-<style>body{margin:0;font-family:system-ui,-apple-system,sans-serif}</style>
+<style>body{margin:0;padding:8px 12px;font-family:system-ui,-apple-system,sans-serif}</style>
 </head>
 <body>
 <!-- iframe fallback for site builders that block custom scripts.
@@ -12,7 +12,7 @@
 <div id="feed" data-social-feed></div>
 <script>
   var q = new URLSearchParams(location.search), el = document.getElementById("feed");
-  ["count", "columns", "gap", "radius", "follow", "accent", "layout", "shape", "tile-width"].forEach(function (k) {
+  ["count", "columns", "gap", "radius", "follow", "accent", "layout", "shape", "tile-width", "eyebrow", "title", "title-highlight", "title-color", "highlight-color", "eyebrow-color", "per-view"].forEach(function (k) {
     var key = k.replace(/-(\w)/g, function (_, c) { return c.toUpperCase(); });
     if (q.has(k)) el.dataset[key] = q.get(k);
   });

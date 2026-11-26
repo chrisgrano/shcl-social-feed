@@ -53,9 +53,37 @@ async function download(url, dest) {
 const profile = await api(`/${ACCOUNT}`, { fields: "username" });
 const media = await api(`/${ACCOUNT}/media`, {
   fields:
-    "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_type,media_url,thumbnail_url}",
+    "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,children{media_type,media_url,thumbnail_url}",
   limit: String(LIMIT),
 });
+
+// View counts (best effort; the feed still works without them).
+// 1) Business Discovery returns view_count for Reels with a basic token.
+// 2) Otherwise try per-post insights ("views"), which needs the insights permission.
+const views = {};
+if (!IS_IG_TOKEN) {
+  try {
+    const bd = await api(`/${ACCOUNT}`, {
+      fields: `business_discovery.username(${profile.username}){media.limit(${LIMIT}){id,view_count}}`,
+    });
+    for (const m of bd.business_discovery?.media?.data || []) if (m.view_count != null) views[m.id] = m.view_count;
+  } catch (err) {
+    console.warn(`View counts via Business Discovery unavailable: ${err.message}`);
+  }
+}
+if (Object.keys(views).length === 0) {
+  for (const item of media.data || []) {
+    try {
+      const ins = await api(`/${item.id}/insights`, { metric: "views" });
+      const v = ins.data?.[0]?.values?.[0]?.value ?? ins.data?.[0]?.total_value?.value;
+      if (v != null) views[item.id] = v;
+    } catch (err) {
+      console.warn(`Per-post view counts unavailable: ${err.message}`);
+      break; // same permission problem for every post; stop trying
+    }
+  }
+}
+console.log(`View counts found for ${Object.keys(views).length} posts`);
 
 await mkdir(MEDIA_DIR, { recursive: true });
 const items = [];
@@ -79,6 +107,8 @@ for (const item of media.data || []) {
     permalink: item.permalink,
     timestamp: item.timestamp,
     image: `media/${file}`,
+    views: views[item.id] ?? null,
+    likes: item.like_count ?? null,
   });
 }
 

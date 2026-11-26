@@ -41,6 +41,14 @@ When it finishes, open `https://chrisgrano.github.io/shcl-social-feed/` to see t
         style="width:100%;border:0;height:1100px" loading="lazy"></iframe>
 ```
 
+**Showcase (styled header + swipeable tall cards with view counts):**
+```html
+<div data-social-feed data-layout="showcase"></div>
+<script src="https://chrisgrano.github.io/shcl-social-feed/widget.js" async></script>
+```
+Change the wording/colors with `data-eyebrow`, `data-title`, `data-title-highlight`, `data-title-color`,
+`data-highlight-color`, `data-eyebrow-color`; `data-per-view` sets how many cards show on desktop (default 5).
+
 **Swipeable single row (carousel):**
 ```html
 <div data-social-feed data-layout="carousel" data-shape="tall" data-count="15"></div>
