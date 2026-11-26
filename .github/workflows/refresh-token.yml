@@ -1,0 +1,38 @@
+name: Refresh Instagram token
+
+on:
+  schedule:
+    - cron: "41 14 * * 1" # Mondays, ~8:41am Chicago
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Refresh token and save it back to the repo secret
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          NEW_TOKEN="$(node scripts/refresh-token.mjs)"
+          echo "::add-mask::$NEW_TOKEN"
+          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" --body "$NEW_TOKEN"
+
+      # Weekly heartbeat commit (no secrets in it) so GitHub never pauses the
+      # scheduled jobs for inactivity, even in weeks with no new posts.
+      - name: Record last refresh
+        run: |
+          date -u +"{\"token_refreshed\": \"%Y-%m-%dT%H:%M:%SZ\"}" > docs/status.json
+          git config user.name "feed-bot"
+          git config user.email "feed-bot@users.noreply.github.com"
+          git add docs/status.json
+          git commit -m "Token refreshed" && git push
