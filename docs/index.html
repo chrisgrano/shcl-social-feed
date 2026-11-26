@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social feed preview</title>
+<style>
+  body{margin:0;padding:32px 20px;font-family:system-ui,-apple-system,sans-serif;color:#222;background:#fafafa}
+  main{max-width:960px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  p{color:#666;margin:0 0 24px}
+  pre{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px;overflow:auto;font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Instagram feed preview</h1>
+  <p>This is how the widget looks. Copy the snippet at the bottom into your website.</p>
+  <div data-social-feed data-count="9" data-columns="3"></div>
+  <h2 style="font-size:16px;margin-top:40px">Embed code</h2>
+  <pre id="code"></pre>
+</main>
+<script>
+  var url = location.href.replace(/(index\.html)?(\?.*)?$/, "");
+  document.getElementById("code").textContent =
+    '<div data-social-feed data-count="9" data-columns="3"></div>\n' +
+    '<script src="' + url + 'widget.js" async><\/script>\n\n' +
+    "Or, if your site builder blocks scripts:\n" +
+    '<iframe src="' + url + 'embed.html?count=9&columns=3" style="width:100%;border:0;height:1100px" loading="lazy"></iframe>';
+</script>
+<script src="widget.js"></script>
+</body>
+</html>
