@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instagram feed</title>
+<style>body{margin:0;font-family:system-ui,-apple-system,sans-serif}</style>
+</head>
+<body>
+<!-- iframe fallback for site builders that block custom scripts.
+     Options pass through the URL, e.g. embed.html?count=6&columns=3&follow=false -->
+<div id="feed" data-social-feed></div>
+<script>
+  var q = new URLSearchParams(location.search), el = document.getElementById("feed");
+  ["count", "columns", "gap", "radius", "follow", "accent"].forEach(function (k) {
+    if (q.has(k)) el.dataset[k] = q.get(k);
+  });
+</script>
+<script src="widget.js"></script>
+</body>
+</html>
