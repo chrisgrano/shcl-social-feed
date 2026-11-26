@@ -1,4 +1,4 @@
-name: Refresh Instagram token
+name: Refresh Instagram token (+ weekly heartbeat)
 
 on:
   schedule:
@@ -24,6 +24,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           NEW_TOKEN="$(node scripts/refresh-token.mjs)"
+          if [ -z "$NEW_TOKEN" ]; then exit 0; fi # non-expiring token: nothing to save
           echo "::add-mask::$NEW_TOKEN"
           gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" --body "$NEW_TOKEN"
 

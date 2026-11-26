@@ -4,9 +4,15 @@
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const TOKEN = process.env.IG_ACCESS_TOKEN;
+const TOKEN = process.env.IG_ACCESS_TOKEN?.trim();
 const LIMIT = Number(process.env.FEED_LIMIT || 24);
-const API = process.env.IG_API_BASE || "https://graph.instagram.com";
+// Two token types work:
+//  - Instagram-login tokens (start with "IG") -> graph.instagram.com, account = "me"
+//  - Meta business / system-user tokens (never expire) -> graph.facebook.com, account = IG_USER_ID
+const IS_IG_TOKEN = TOKEN?.startsWith("IG");
+const API =
+  process.env.IG_API_BASE || (IS_IG_TOKEN ? "https://graph.instagram.com" : "https://graph.facebook.com/v21.0");
+const ACCOUNT = IS_IG_TOKEN ? "me" : process.env.IG_USER_ID || "17841414618981349"; // @sweethomechicagoland
 const DOCS = path.resolve("docs");
 const MEDIA_DIR = path.join(DOCS, "media");
 
@@ -44,8 +50,8 @@ async function download(url, dest) {
   await writeFile(dest, Buffer.from(await res.arrayBuffer()));
 }
 
-const profile = await api("/me", { fields: "username" });
-const media = await api("/me/media", {
+const profile = await api(`/${ACCOUNT}`, { fields: "username" });
+const media = await api(`/${ACCOUNT}/media`, {
   fields:
     "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_type,media_url,thumbnail_url}",
   limit: String(LIMIT),

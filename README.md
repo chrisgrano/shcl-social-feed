@@ -4,35 +4,26 @@ Shows the latest @sweethomechicagoland Instagram posts on your websites (e.g. sw
 
 - Every 3 hours, a GitHub Action pulls your latest posts from Instagram and saves copies of the images.
 - GitHub Pages hosts the feed and a small embeddable widget.
-- Every Monday, a second Action renews your Instagram token so it never expires.
+- It uses a never-expiring Meta token, so there's nothing to renew. A weekly job keeps the schedule from being paused for inactivity.
 
 ## One-time setup
 
-### 1. Get an Instagram access token
-Use the Meta app you already have for Instagram (or create one at developers.facebook.com):
+### 1. Instagram access token
+Meta app **SHCL Social Feed** (business portfolio: Chris Grano, Realtor) → Use cases → Instagram API →
+**API setup with Unified login** → **2. Generate access tokens** → **Generate token** for @sweethomechicagoland.
+This token never expires.
 
-1. **App Dashboard → Instagram → API setup with Instagram login**.
-2. The account must be a Business or Creator account (Instagram app → Settings → Account type).
-3. Under **Generate access tokens**, add @sweethomechicagoland and click **Generate token**.
-   This gives you a long-lived token (about 60 days). The `instagram_business_basic` permission is all this needs.
-
-### 2. Make a GitHub token for the auto-refresh
-GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token:
-- Repository access: **Only this repo** (`shcl-social-feed`)
-- Permissions: **Secrets → Read and write**
-- Expiration: the longest it allows (set a calendar reminder to renew it)
-
-### 3. Add both as repo secrets
+### 2. Save it as a repo secret
 Repo → **Settings → Secrets and variables → Actions → New repository secret**:
-| Name | Value |
-|---|---|
-| `IG_ACCESS_TOKEN` | the Instagram token from step 1 |
-| `GH_PAT` | the GitHub token from step 2 |
+name `IG_ACCESS_TOKEN`, value = the token.
 
-### 4. Turn on GitHub Pages
+(A `GH_PAT` secret is only needed if you ever switch to an expiring Instagram-login token, which starts with "IG".
+The weekly job then renews it automatically.)
+
+### 3. Turn on GitHub Pages
 Repo → **Settings → Pages → Source: GitHub Actions**.
 
-### 5. Run it
+### 4. Run it
 Repo → **Actions → Update Instagram feed → Run workflow**.
 When it finishes, open `https://chrisgrano.github.io/shcl-social-feed/` to see the preview and copy the embed code.
 
@@ -56,5 +47,4 @@ For the iframe, pass the same names in the URL (`?count=6&accent=%230b2545`).
 
 ## If something breaks
 GitHub emails you when an Action fails.
-- **Token expired or invalid:** generate a new Instagram token (step 1) and paste it into the `IG_ACCESS_TOKEN` secret.
-- **Refresh job fails at "gh secret set":** the `GH_PAT` token expired. Make a new one (step 2).
+- **Token rejected:** the app was removed, or @sweethomechicagoland's access to it changed. Generate a new token (step 1) and replace the `IG_ACCESS_TOKEN` secret.

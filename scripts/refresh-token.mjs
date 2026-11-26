@@ -1,9 +1,14 @@
 // Extends the Instagram long-lived token (good for 60 days) and prints the new one.
 // The workflow saves the result back into the repo's IG_ACCESS_TOKEN secret.
-const TOKEN = process.env.IG_ACCESS_TOKEN;
+const TOKEN = process.env.IG_ACCESS_TOKEN?.trim();
 if (!TOKEN) {
   console.error("Missing IG_ACCESS_TOKEN");
   process.exit(1);
+}
+// Meta system-user tokens never expire, so there is nothing to refresh.
+if (!TOKEN.startsWith("IG")) {
+  console.error("Token does not expire; no refresh needed.");
+  process.exit(0);
 }
 
 const url = new URL("https://graph.instagram.com/refresh_access_token");
