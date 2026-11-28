@@ -494,6 +494,15 @@
       });
   }
 
+  // Small API so a custom-built section can use the live feed and the pop-up:
+  //   SHCLFeed.load().then(function (feed) { ... SHCLFeed.open(feed, items, i) ... })
+  window.SHCLFeed = {
+    base: base,
+    load: loadFeed,
+    open: function (feed, items, index) { openBox(feed, items, index || 0); },
+  };
+  try { document.dispatchEvent(new Event("shclfeed:ready")); } catch (e) {}
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
