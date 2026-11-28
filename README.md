@@ -58,6 +58,12 @@ Change the wording/colors with `data-eyebrow`, `data-title`, `data-title-highlig
 Options: `data-layout` (`grid` or `carousel`), `data-shape` (`square`, `portrait` 4:5, `tall` 9:16),
 `data-count`, `data-columns` (grid; phones always show 2), `data-tile-width` (carousel, px), `data-gap`, `data-radius`,
 `data-accent` (button color, e.g. `#0b2545`), `data-follow="false"` to hide the Follow button.
+
+**Pop-up player.** Clicking a post opens it right on the page: Reels play in a video player (sound on, arrows/swipe to
+the next post), photos open full size, and "Watch on Instagram" is always there. Video links come from Instagram and
+expire after a few days, which is fine because the feed refreshes every 3 hours. If a Reel has no video link (some
+licensed-music Reels), the pop-up uses Instagram's own embedded player. Add `data-popup="false"` to send clicks
+straight to Instagram instead.
 For the iframe, pass the same names in the URL (`?count=6&accent=%230b2545`).
 
 ## If something breaks

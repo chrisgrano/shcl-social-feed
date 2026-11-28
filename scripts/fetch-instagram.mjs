@@ -44,6 +44,19 @@ function pickImage(item) {
   return item.media_url || null;
 }
 
+// Video file to play in the website's pop-up player. Instagram's video links expire
+// after a few days, but the feed refreshes every 3 hours so they stay fresh.
+// (Instagram leaves media_url out for some Reels with licensed music; the pop-up
+// then falls back to Instagram's own embedded player.)
+function pickVideo(item) {
+  if (item.media_type === "VIDEO") return item.media_url || null;
+  if (item.media_type === "CAROUSEL_ALBUM") {
+    const first = item.children?.data?.[0];
+    if (first?.media_type === "VIDEO") return first.media_url || null;
+  }
+  return null;
+}
+
 async function download(url, dest) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Image download failed (${res.status})`);
@@ -107,6 +120,7 @@ for (const item of media.data || []) {
     permalink: item.permalink,
     timestamp: item.timestamp,
     image: `media/${file}`,
+    video: pickVideo(item),
     views: views[item.id] ?? null,
     likes: item.like_count ?? null,
   });
